@@ -12,6 +12,7 @@ public class MyCommandRunner implements CommandLineRunner {
 		String mainPage = "http://localhost:8080/";
 		log.info("开始自动加载页面:{}", mainPage);
 //hot-fix
+		//master-test
 //		try {
 //			Runtime.getRuntime().exec("cmd   /c   start   " + mainPage);//可以指定自己的路径
 //		} catch (Exception ex) {
