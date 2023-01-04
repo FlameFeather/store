@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.store.mapper.UserMapper">
+    <select id="getById" resultType="com.example.store.entity.model.UserModel">
+        select *
+        from t_user
+        where uid = #{id}
+    </select>
+    <select id="getByUsername" resultType="com.example.store.entity.model.UserModel">
+        select *
+        from t_user
+        where username = #{username}
+    </select>
+    <select id="getLoginInfoByUsername" resultMap="LoginResultMap">
+        select t_user.uid         as user_uid,
+               t_user.username    as user_username,
+               t_user.password    as user_password,
+               t_user.is_enable   as user_is_enable,
+               t_permission.pid   as permission_pid,
+               t_permission.name  as permission_name,
+               t_permission.value as permission_value
+        from t_user
+                 left join t_user_role on t_user.uid = t_user_role.uid
+                 left join t_role_permission on t_user_role.rid = t_role_permission.rid
+                 left join t_permission on t_role_permission.pid = t_permission.pid
+        where username = #{username}
+    </select>
+    <resultMap id="LoginResultMap" type="com.example.store.entity.vo.UserLoginVO">
+        <id column="user_uid" property="uid"/>
+        <result column="user_username" property="username"/>
+        <result column="user_password" property="password"/>
+        <result column="user_is_enable" property="isEnable"/>
+        <collection property="permissions" ofType="com.example.store.entity.vo.PermissionVO">
+            <id column="permission_pid" property="id"/>
+            <result column="permission_name" property="name"/>
+            <result column="permission_value" property="value"/>
+        </collection>
+    </resultMap>
+    <insert id="add" parameterType="com.example.store.entity.model.UserModel" useGeneratedKeys="true" keyProperty="uid"
+            keyColumn="uid">
+        insert into t_user
+        values (#{uid}, #{username}, #{password}, #{gender}, #{phone}, #{email}, #{avatar}, #{isEnable},
+                #{createdUser}, #{createdTime}, #{modifiedUser}, #{modifiedTime})
+    </insert>
+    <update id="updatePasswordById" parameterType="com.example.store.entity.dto.PasswordChangeDTO">
+        update t_user
+        set password=#{newPassword},
+            modified_time=#{modifiedTime},
+            modified_user=#{username}
+        where username = #{username}
+    </update>
+    <update id="infoChange" parameterType="com.example.store.entity.dto.InfoChangeDTO">
+        update t_user
+        set phone=#{phone},
+            gender=#{gender},
+            email=#{email}
+        where username = #{username}
+    </update>
+    <update id="avatarChange" parameterType="com.example.store.entity.dto.AvatarChangeDTO">
+        update t_user
+        set avatar=#{avatar},
+            modified_user=#{modifiedUser},
+            modified_time=#{modifiedTime}
+        where username = #{username}
+    </update>
+    <insert id="authorization" parameterType="com.example.store.entity.model.UserRoleModel">
+        insert into t_user_role
+        values (#{id}, #{uid}, #{rid}, #{createdUser}, #{createdTime}, #{modifiedUser}, #{modifiedTime})
+    </insert>
+</mapper>

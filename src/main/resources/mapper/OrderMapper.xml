@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.store.mapper.OrderMapper">
+    <insert id="add" parameterType="com.example.store.entity.model.OrderModel" useGeneratedKeys="true" keyProperty="oid"
+            keyColumn="oid">
+        insert into t_order
+        values (#{oid}, #{uid}, #{recvName}, #{recvPhone}, #{recvProvince}, #{recvCity}, #{recvArea},
+                #{recvAddress}, #{price}, #{orderTime}, #{payTime}, #{status}, #{createdUser}, #{createdTime},
+                #{modifiedUser}, #{modifiedTime})
+    </insert>
+    <insert id="addItem" parameterType="com.example.store.entity.model.OrderItemModel">
+        insert into t_order_item
+        values (#{id}, #{oid}, #{pid}, #{title}, #{image}, #{price}, #{num}, #{createdUser}, #{createdTime},
+                #{modifiedUser}, #{modifiedTime})
+    </insert>
+</mapper>

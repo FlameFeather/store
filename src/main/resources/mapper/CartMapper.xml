@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.store.mapper.CartMapper">
+    <insert id="addToCart" parameterType="com.example.store.entity.model.CartModel">
+        insert into t_cart
+        values (#{cid}, #{uid}, #{pid}, #{num}, #{price}, #{createdUser}, #{createdTime}, #{modifiedUser},
+                #{modifiedTime})
+    </insert>
+    <select id="getCartByUidPid" resultType="com.example.store.entity.model.CartModel">
+        select *
+        from t_cart
+        where uid = #{uid}
+          and pid = #{pid}
+    </select>
+    <update id="updateAmount">
+        update t_cart
+        set num=#{amount}
+        where pid = #{pid}
+          and uid = #{uid}
+    </update>
+    <update id="updatePrice">
+        update t_cart
+        set price=#{price}
+        where pid = #{pid}
+          and uid = #{uid}
+    </update>
+    <select id="getCartByUid" resultType="com.example.store.entity.vo.CartVO">
+        select t_cart.cid      as cid,
+               t_cart.price    as realPrice,
+               t_cart.num      as num,
+               t_product.image as image,
+               t_product.title as title
+        from t_cart
+                 inner join t_product on t_cart.pid = t_product.id
+        where uid = #{uid}
+    </select>
+    <select id="getCartByCids" resultType="com.example.store.entity.vo.CartVO">
+        select t_cart.cid as cid,
+        t_cart.price as realPrice,
+        t_cart.num as num,
+        t_product.image as image,
+        t_product.title as title
+        from t_cart
+        inner join t_product on t_cart.pid = t_product.id
+        where cid in (
+        <foreach collection="cids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+        and uid = #{uid}
+    </select>
+    <select id="getCartByCid" resultType="com.example.store.entity.model.CartModel">
+        select *
+        from t_cart
+        where cid = #{cid}
+    </select>
+    <delete id="deleteByIds">
+        delete
+        from t_cart
+        where cid in (
+        <foreach collection="cids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+</mapper>

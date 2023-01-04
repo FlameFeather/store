@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.store.mapper.ProductMapper">
+    <select id="get" resultType="com.example.store.entity.vo.ProductVO">
+        select id, title, price, image
+        from t_product
+        where status = 1
+        order by priority
+    </select>
+    <select id="getDetailsById" resultType="com.example.store.entity.vo.DetailsVO">
+        select title, sell_point assellPoint, price, image
+        from t_product
+        where id = #{id}
+    </select>
+</mapper>

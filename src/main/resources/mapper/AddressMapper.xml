@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.store.mapper.AddressMapper">
+    <select id="getDistrict" resultType="com.example.store.entity.vo.DistrictVO">
+        select name, code
+        from t_dict_district
+        where parent = #{parent}
+    </select>
+    <insert id="addAddress" parameterType="com.example.store.entity.model.AddressModel">
+        insert into t_address
+        values (#{aid}, #{uid}, #{receiver}, #{provinceName}, #{provinceCode}, #{cityName}, #{cityCode}, #{areaName},
+                #{areaCode}, #{zip}, #{address}, #{phone}, #{tel}, #{tag}, #{isDefault}, #{createdUser},
+                #{createdTime}, #{modifiedUser}, #{modifiedTime})
+    </insert>
+    <select id="getDistrictNameByCode" resultType="String">
+        select name
+        from t_dict_district
+        where code = #{code}
+    </select>
+    <select id="getAddresses" resultType="com.example.store.entity.vo.AddressVO">
+        select aid,
+               tag,
+               receiver,
+               province_name as provinceName,
+               city_name     as cityName,
+               area_name     as areaName,
+               address,
+               phone,
+               is_default    as isDefault
+        from t_address
+        where uid = #{uid}
+    </select>
+    <update id="clearDefault">
+        update t_address
+        set is_default=0
+        where uid = #{uid}
+    </update>
+    <update id="setDefault">
+        update t_address
+        set is_default=1
+        where uid = #{uid}
+          and aid = #{aid}
+    </update>
+    <delete id="delete">
+        delete
+        from t_address
+        where uid = #{uid}
+          and aid = #{aid}
+    </delete>
+    <select id="getAddressById" resultType="com.example.store.entity.model.AddressModel">
+        select *
+        from t_address
+        where aid = #{id}
+    </select>
+</mapper>
